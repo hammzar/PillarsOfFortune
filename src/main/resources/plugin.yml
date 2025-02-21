@@ -1,0 +1,4 @@
+name: POF
+version: '${project.version}'
+main: me.hamza.pillarsoffortune.POF
+api-version: '1.21'
