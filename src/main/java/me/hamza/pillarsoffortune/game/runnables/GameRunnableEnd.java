@@ -12,7 +12,8 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import java.util.Random;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Hammzar
@@ -21,8 +22,7 @@ import java.util.Random;
 
 public class GameRunnableEnd extends BukkitRunnable {
 
-    private int celebrationTicks = 100; // 5 seconds (100 ticks)
-    private final Random random = new Random();
+    private int celebrationTicks = 100;
 
     @Override
     public void run() {
@@ -75,6 +75,6 @@ public class GameRunnableEnd extends BukkitRunnable {
 
     private Color getRandomColor() {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PURPLE, Color.ORANGE, Color.WHITE};
-        return colors[random.nextInt(colors.length)];
+        return colors[ThreadLocalRandom.current().nextInt(colors.length)];
     }
 }
