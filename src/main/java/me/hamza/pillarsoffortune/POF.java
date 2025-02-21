@@ -7,6 +7,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import me.hamza.pillarsoffortune.arena.ArenaHandler;
+import me.hamza.pillarsoffortune.commands.ArenaCommand;
 import me.hamza.pillarsoffortune.game.GameHandler;
 import me.hamza.pillarsoffortune.item.ItemOrganizer;
 import me.hamza.pillarsoffortune.item.ItemRandomizer;
@@ -62,6 +63,8 @@ public class POF extends JavaPlugin {
         gameHandler = new GameHandler();
         initMongo();
         playerHandler = new PlayerHandler();
+
+        Objects.requireNonNull(this.getCommand("arena")).setExecutor(new ArenaCommand());
     }
 
     @Override
@@ -80,7 +83,7 @@ public class POF extends JavaPlugin {
             mongoclientbuilder.applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(30, TimeUnit.SECONDS));
 
             this.mongoClient = MongoClients.create(mongoclientbuilder.build());
-            this.mongoDatabase = mongoClient.getDatabase(Objects.requireNonNull(settingsConfiguration.getConfig().getString("MONGO.DB")));
+            this.mongoDatabase = mongoClient.getDatabase(Objects.requireNonNull(settingsConfiguration.getConfig().getString("MONGO.DATABASE")));
 
             CC.log("&8[&dPOF&8] &aEstablished MongoDB connection!");
         } catch (Exception exception) {
