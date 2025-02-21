@@ -2,6 +2,7 @@ package me.hamza.pillarsoffortune.arena;
 
 import lombok.Getter;
 import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.utils.ObjectSerializer;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,15 +32,15 @@ public class ArenaHandler {
             ConfigurationSection arenaSection = configuration.getConfigurationSection("arenas." + arenaName);
             if (arenaSection == null) continue;
 
-            Location center = (Location) arenaSection.get("center");
-            List<Location> spawnLocations = new ArrayList<>();
-            List<?> rawList = arenaSection.getList("spawnPoints");
+            String centerString = arenaSection.getString("center");
+            Location center = ObjectSerializer.deserializeLocation(Objects.requireNonNull(centerString));
 
-            if (rawList != null) {
-                for (Object obj : rawList) {
-                    if (obj instanceof Location) {
-                        spawnLocations.add((Location) obj);
-                    }
+            List<String> rawSpawnLocations = arenaSection.getStringList("spawnPoints");
+            List<Location> spawnLocations = new ArrayList<>();
+            for (String spawnString : rawSpawnLocations) {
+                Location spawn = ObjectSerializer.deserializeLocation(spawnString);
+                if (spawn != null) {
+                    spawnLocations.add(spawn);
                 }
             }
 
@@ -72,8 +73,14 @@ public class ArenaHandler {
 
     public void saveArena(Arena arena) {
         String path = "arenas." + arena.getName();
-        configuration.set(path + ".center", arena.getCenter());
-        configuration.set(path + ".spawnPoints", arena.getLocations());
+
+        configuration.set(path + ".center", ObjectSerializer.serializeLocation(arena.getCenter()));
+
+        List<String> serializedSpawnPoints = new ArrayList<>();
+        for (Location spawn : arena.getLocations()) {
+            serializedSpawnPoints.add(ObjectSerializer.serializeLocation(spawn));
+        }
+        configuration.set(path + ".spawnPoints", serializedSpawnPoints);
 
         POF.getInstance().getArenaConfiguration().save();
     }
