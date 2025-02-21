@@ -9,10 +9,8 @@ import lombok.Setter;
  */
 
 @Getter @Setter
-public class GameHandler {
+public class GameManager {
 
     private Game activeGame;
-
-
 
 }

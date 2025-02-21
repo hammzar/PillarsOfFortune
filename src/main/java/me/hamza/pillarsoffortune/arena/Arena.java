@@ -25,11 +25,4 @@ public class Arena {
         this.locations = cLocation;
     }
 
-    public Location getRandomSpawn() {
-        if (locations.isEmpty()) {
-            return center;
-        }
-        return locations.get(ThreadLocalRandom.current().nextInt(locations.size()));
-    }
-
 }

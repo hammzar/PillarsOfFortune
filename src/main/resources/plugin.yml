@@ -3,6 +3,7 @@ version: '${project.version}'
 author: Hammzar
 main: me.hamza.pillarsoffortune.POF
 api-version: '1.21'
+description: '${project.description}'
 commands:
   pof:
     description: Main Command of the core
@@ -13,3 +14,5 @@ commands:
     description: Arena management commands
     usage: /arena <add|remove|list|teleport>
     permission: pof.arena
+  tntcart:
+    description: TNT cart commands

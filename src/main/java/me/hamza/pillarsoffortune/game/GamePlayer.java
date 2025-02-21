@@ -17,7 +17,7 @@ public class GamePlayer {
 
     private final UUID uuid;
     private final Player player;
-    private final boolean dead;
+    private boolean dead;
 
     public GamePlayer(UUID cUuid) {
         this.uuid = cUuid;

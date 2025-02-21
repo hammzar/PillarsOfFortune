@@ -20,7 +20,17 @@ public class ItemRandomizer {
 
     public Material getItem() {
         double chance = ThreadLocalRandom.current().nextDouble(100);
-        int chanceGroup = chance < 40 ? (int) chance / 10 : 4;
+        int chanceGroup;
+
+        if (chance < 60) {
+            chanceGroup = 0;
+        } else if (chance < 80) {
+            chanceGroup = 1;
+        } else if (chance < 90) {
+            chanceGroup = 2;
+        } else {
+            chanceGroup = 3;
+        }
 
         List<Material> category;
         switch (chanceGroup) {

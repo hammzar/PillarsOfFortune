@@ -8,7 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author Hemze
+ * @author Hammzar
  * @since 21/02/2025
  */
 

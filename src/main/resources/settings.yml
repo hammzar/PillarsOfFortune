@@ -1,0 +1,6 @@
+MONGO:
+  STRING: "mongodb://localhost:27017"
+  DATABASE: PillarsOfFortune
+
+game:
+  size: 2

@@ -9,12 +9,15 @@ import lombok.Getter;
 import me.hamza.pillarsoffortune.arena.ArenaHandler;
 import me.hamza.pillarsoffortune.commands.ArenaCommand;
 import me.hamza.pillarsoffortune.commands.MainCommand;
-import me.hamza.pillarsoffortune.game.GameHandler;
+import me.hamza.pillarsoffortune.commands.TNTCartCommand;
+import me.hamza.pillarsoffortune.game.GameListener;
+import me.hamza.pillarsoffortune.game.GameManager;
 import me.hamza.pillarsoffortune.item.ItemOrganizer;
 import me.hamza.pillarsoffortune.item.ItemRandomizer;
 import me.hamza.pillarsoffortune.player.PlayerHandler;
 import me.hamza.pillarsoffortune.player.PlayerListener;
 import me.hamza.pillarsoffortune.item.ItemRunnable;
+import me.hamza.pillarsoffortune.player.PlayerRunnable;
 import me.hamza.pillarsoffortune.utils.CC;
 import me.hamza.pillarsoffortune.utils.Config;
 import org.bukkit.Bukkit;
@@ -37,10 +40,11 @@ public class POF extends JavaPlugin {
     private ItemOrganizer itemOrganizer;
     private ItemRandomizer itemRandomizer;
     private ItemRunnable itemRunnable;
-    private GameHandler gameHandler;
+    private GameManager gameManager;
     private MongoClient mongoClient;
     private MongoDatabase mongoDatabase;
     private PlayerHandler playerHandler;
+    private PlayerRunnable playerRunnable;
 
     private Config arenaConfiguration, messagesConfiguration, settingsConfiguration;
 
@@ -53,6 +57,7 @@ public class POF extends JavaPlugin {
         settingsConfiguration = new Config("settings.yml", this);
 
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GameListener(), this);
 
         arenaHandler = new ArenaHandler();
         arenaHandler.init();
@@ -61,18 +66,23 @@ public class POF extends JavaPlugin {
         itemRandomizer = new ItemRandomizer();
         itemRunnable = new ItemRunnable();
         itemRunnable.runTaskTimer(this, 0L, 1L);
-        gameHandler = new GameHandler();
+        gameManager = new GameManager();
         initMongo();
         playerHandler = new PlayerHandler();
+        playerRunnable = new PlayerRunnable();
+        playerRunnable.runTaskTimer(this, 0L, 20L);
 
         Objects.requireNonNull(this.getCommand("arena")).setExecutor(new ArenaCommand());
         Objects.requireNonNull(this.getCommand("pof")).setExecutor(new MainCommand());
+        Objects.requireNonNull(this.getCommand("tntcart")).setExecutor(new TNTCartCommand());
     }
 
     @Override
     public void onDisable() {
         itemRunnable.cancel();
-        gameHandler.getActiveGame().end();
+        if (gameManager.getActiveGame() != null) {
+            gameManager.getActiveGame().end();
+        }
         arenaHandler.getArenas().forEach(arena -> arenaHandler.saveArena(arena));
         playerHandler.getPlayerDataMap().forEach((uuid, playerData) -> playerData.store());
     }
