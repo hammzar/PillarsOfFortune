@@ -8,6 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import me.hamza.pillarsoffortune.arena.ArenaHandler;
 import me.hamza.pillarsoffortune.commands.ArenaCommand;
+import me.hamza.pillarsoffortune.commands.MainCommand;
 import me.hamza.pillarsoffortune.game.GameHandler;
 import me.hamza.pillarsoffortune.item.ItemOrganizer;
 import me.hamza.pillarsoffortune.item.ItemRandomizer;
@@ -65,6 +66,7 @@ public class POF extends JavaPlugin {
         playerHandler = new PlayerHandler();
 
         Objects.requireNonNull(this.getCommand("arena")).setExecutor(new ArenaCommand());
+        Objects.requireNonNull(this.getCommand("pof")).setExecutor(new MainCommand());
     }
 
     @Override
