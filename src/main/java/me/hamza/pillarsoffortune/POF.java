@@ -41,8 +41,6 @@ public class POF extends JavaPlugin {
     private MongoDatabase mongoDatabase;
     private PlayerHandler playerHandler;
 
-    //
-
     private Config arenaConfiguration, messagesConfiguration, settingsConfiguration;
 
     @Override
