@@ -34,7 +34,7 @@ public class GameRunnable extends BukkitRunnable {
             cooldownTicks--;
 
             if (cooldownTicks % 20 == 0) {
-                int secondsRemaining = cooldownTicks / 20;
+                int secondsRemaining = cooldownTicks / 20 + 1;
                 String timeMessage = (secondsRemaining == 1) ? "second" : "seconds";
 
                 activeGame.getGamePlayers().forEach(player ->
@@ -50,7 +50,7 @@ public class GameRunnable extends BukkitRunnable {
 
                 activeGame.getUsedSpawns().forEach(GlassCageUtils::removeGlassCage);
 
-                // another game runnable to end the game when no gameplayer is alive besides one
+                new GameRunnableEnd().runTaskTimer(POF.getInstance(), 0, 20L);
             }
         }
     }

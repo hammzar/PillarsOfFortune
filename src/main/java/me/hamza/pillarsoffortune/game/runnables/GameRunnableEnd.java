@@ -3,6 +3,7 @@ package me.hamza.pillarsoffortune.game.runnables;
 import me.hamza.pillarsoffortune.POF;
 import me.hamza.pillarsoffortune.game.Game;
 import me.hamza.pillarsoffortune.game.GameState;
+import me.hamza.pillarsoffortune.player.PlayerData;
 import me.hamza.pillarsoffortune.utils.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -36,6 +37,9 @@ public class GameRunnableEnd extends BukkitRunnable {
         Player winnerPlayer = Bukkit.getPlayer(activeGame.getWinner());
 
         if (winnerPlayer != null) {
+            PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(winnerPlayer.getUniqueId());
+            playerData.setWins(playerData.getWins() + 1);
+
             activeGame.setState(GameState.ENDING);
             activeGame.getGamePlayers().forEach(gamePlayer ->
                     gamePlayer.sendMessage(CC.color("&a" + winnerPlayer.getName() + " has won the game!"))
@@ -77,4 +81,5 @@ public class GameRunnableEnd extends BukkitRunnable {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.PURPLE, Color.ORANGE, Color.WHITE};
         return colors[ThreadLocalRandom.current().nextInt(colors.length)];
     }
+
 }

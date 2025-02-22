@@ -48,7 +48,7 @@ public class ArenaHandler {
         }
     }
 
-    public void addArena(Arena arena) {
+    public void createArena(Arena arena) {
         arenas.add(arena);
         saveArena(arena);
     }

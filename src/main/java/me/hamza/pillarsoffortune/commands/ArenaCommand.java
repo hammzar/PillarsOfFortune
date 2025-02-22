@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Hammzar
@@ -35,22 +34,23 @@ public class ArenaCommand implements CommandExecutor {
         if (args.length == 0) {
             player.sendMessage("");
             player.sendMessage(CC.color("&d&lPILLARS OF FORTUNE &7- &dArena Commands"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena add <name> &7- &fAdd an arena"));
+            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena create <name> &7- &fAdd an arena"));
             player.sendMessage(CC.color("&7▢ &dUsage: &f/arena remove <name> &7- &fRemove an arena"));
             player.sendMessage(CC.color("&7▢ &dUsage: &f/arena list &7- &fList all arenas"));
             player.sendMessage(CC.color("&7▢ &dUsage: &f/arena teleport <name> &7- &fTeleport to an arena"));
             player.sendMessage(CC.color("&7▢ &dUsage: &f/arena addspawn <name> &7- &fAdd an arena spawn"));
+            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena setcenter <name> &7- &fSet the arena center"));
             player.sendMessage("");
             return true;
         }
 
         switch (args[0].toLowerCase()) {
-            case "add":
+            case "create":
                 if (args.length < 2) {
-                    player.sendMessage(CC.color("&cUsage: /arena add <name>"));
+                    player.sendMessage(CC.color("&cUsage: /arena create <name>"));
                     return true;
                 }
-                addArena(player, args[1]);
+                createArena(player, args[1]);
                 break;
 
             case "remove":
@@ -71,6 +71,11 @@ public class ArenaCommand implements CommandExecutor {
                 }
                 tpToArena(player, args[1]);
                 break;
+            case "setcenter":
+                if (args.length < 2) {
+                    player.sendMessage(CC.color("&cUsage: /arena setcenter <name>"));
+                }
+                setCenter(player, args[1]);
             case "addspawn":
                 if (args.length < 2) {
                     player.sendMessage(CC.color("&cUsage: /arena addspawn <name>"));
@@ -79,7 +84,7 @@ public class ArenaCommand implements CommandExecutor {
             default:
                 player.sendMessage("");
                 player.sendMessage(CC.color("&d&lPILLARS OF FORTUNE &7- &dArena Commands"));
-                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena add <name> &7- &fAdd an arena"));
+                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena create <name> &7- &fAdd an arena"));
                 player.sendMessage(CC.color("&7▢ &dUsage: &f/arena remove <name> &7- &fRemove an arena"));
                 player.sendMessage(CC.color("&7▢ &dUsage: &f/arena list &7- &fList all arenas"));
                 player.sendMessage(CC.color("&7▢ &dUsage: &f/arena teleport <name> &7- &fTeleport to an arena"));
@@ -91,11 +96,11 @@ public class ArenaCommand implements CommandExecutor {
         return true;
     }
 
-    private void addArena(Player player, String name) {
+    private void createArena(Player player, String name) {
         Location center = player.getLocation();
         Arena arena = new Arena(name, center, new ArrayList<>());
-        arenaHandler.addArena(arena);
-        player.sendMessage(CC.color("&aArena '" + name + "' has been created at your location!"));
+        arenaHandler.createArena(arena);
+        player.sendMessage(CC.color("&aArena '" + name + "' has been created!"));
     }
 
     private void removeArena(Player player, String name) {
@@ -115,10 +120,12 @@ public class ArenaCommand implements CommandExecutor {
             return;
         }
 
-        player.sendMessage(CC.color("&aAvailable Arenas:"));
+        player.sendMessage("");
+        player.sendMessage(CC.color("&d&lPILLARS OF FORTUNE &7- &dArenas"));
         for (Arena arena : arenas) {
-            player.sendMessage(CC.color("&7- " + arena.getName()));
+            player.sendMessage(CC.color("&7- &d" + arena.getName()));
         }
+        player.sendMessage("");
     }
 
     private void tpToArena(Player player, String name) {
@@ -137,8 +144,25 @@ public class ArenaCommand implements CommandExecutor {
             player.sendMessage(CC.color("&cArena not found!"));
             return;
         }
+
+        if (player.getLocation() == arena.getCenter()) {
+            player.sendMessage(CC.color("&cYou cannot add the arena center as a spawn!"));
+            return;
+        }
+
         arena.getLocations().add(player.getLocation());
         player.sendMessage(CC.color("&aSpawn has been added to arena '" + name + "'!"));
+        arenaHandler.saveArena(arena);
+    }
+
+    private void setCenter(Player player, String name) {
+        Arena arena = arenaHandler.getArena(name);
+        if (arena == null) {
+            player.sendMessage(CC.color("&cArena not found!"));
+            return;
+        }
+        arena.setCenter(player.getLocation());
+        player.sendMessage(CC.color("&aCenter has been set to arena '" + name + "'!"));
         arenaHandler.saveArena(arena);
     }
 }

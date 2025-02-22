@@ -5,6 +5,8 @@ import lombok.Setter;
 import me.hamza.pillarsoffortune.POF;
 import me.hamza.pillarsoffortune.arena.Arena;
 import me.hamza.pillarsoffortune.game.runnables.GameRunnable;
+import me.hamza.pillarsoffortune.player.PlayerData;
+import me.hamza.pillarsoffortune.player.PlayerState;
 import me.hamza.pillarsoffortune.utils.CC;
 import me.hamza.pillarsoffortune.utils.GlassCageUtils;
 import me.hamza.pillarsoffortune.utils.PlayerUtils;
@@ -32,8 +34,6 @@ public class Game {
     private final Arena arena;
     private Set<Location> usedSpawns;
     private UUID winner;
-
-    private HashMap<Location, BlockData> blockMapBackup;
 
     public Game(int cPlayerSize, List<Player> cPlayers) {
         this.gamePlayers = new HashSet<>();
@@ -64,6 +64,11 @@ public class Game {
                 GlassCageUtils.createGlassCage(spawn);
             }
         }
+
+        getGamePlayers().forEach(player -> {
+            PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+            playerData.setState(PlayerState.PLAYING);
+        });
 
         Bukkit.broadcastMessage("§cDebug: Resetting players");
         getGamePlayers().forEach(player -> PlayerUtils.reset(player, true));
@@ -110,7 +115,7 @@ public class Game {
         return null;
     }
 
-    public void onDeath(Player player) {
+    public void onDeath(Player player, Player killer) {
         GamePlayer gamePlayer = getGamePlayer(player.getUniqueId());
 
         if (gamePlayer == null || gamePlayer.isDead()) {
@@ -127,5 +132,13 @@ public class Game {
         if (alivePlayers.size() == 1) {
             winner = alivePlayers.get(0).getUuid();
         }
+
+        if (killer != null) {
+            PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(killer.getUniqueId());
+            playerData.addKills(1);
+        }
+
+        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        playerData.addLosses(1);
     }
 }
