@@ -1,6 +1,6 @@
 package me.hamza.pillarsoffortune.player;
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +22,7 @@ public class PlayerListener implements Listener {
         Player player = e.getPlayer();
         UUID uniqueID = player.getUniqueId();
 
-        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(uniqueID);
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(uniqueID);
         playerData.setUsername(player.getName());
     }
 
@@ -30,17 +30,17 @@ public class PlayerListener implements Listener {
     public void onPlayerLogin(PlayerLoginEvent e) {
         Player player = e.getPlayer();
         UUID uniqueId = player.getUniqueId();
-        if (POF.getInstance().getPlayerHandler().getPlayer(uniqueId) != null) {
+        if (Mortal.getInstance().getPlayerHandler().getPlayer(uniqueId) != null) {
             return;
         }
 
         PlayerData playerData = new PlayerData(uniqueId);
         playerData.load();
-        POF.getInstance().getPlayerHandler().getPlayerDataMap().put(uniqueId, playerData);
+        Mortal.getInstance().getPlayerHandler().getPlayerDataMap().put(uniqueId, playerData);
     }
 
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent e) {
-        POF.getInstance().getPlayerHandler().getPlayer(e.getPlayer().getUniqueId()).store();
+        Mortal.getInstance().getPlayerHandler().getPlayer(e.getPlayer().getUniqueId()).store();
     }
 }

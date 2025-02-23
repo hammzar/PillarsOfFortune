@@ -1,10 +1,11 @@
 package me.hamza.pillarsoffortune.player;
 
+import com.mongodb.client.model.UpdateOptions;
 import lombok.Getter;
 import lombok.Setter;
 
 import com.mongodb.client.MongoCollection;
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import org.bson.Document;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class PlayerHandler {
     }
 
     public void storeData(PlayerData playerData) {
-        MongoCollection<Document> collection = POF.getInstance().getMongoDatabase().getCollection("player_data");
+        MongoCollection<Document> collection = Mortal.getInstance().getMongoDatabase().getCollection("player_data");
         Document playerDocument = new Document("uuid", playerData.getUuid().toString())
                 .append("username", playerData.getUsername())
                 .append("wins", playerData.getWins())
@@ -41,11 +42,11 @@ public class PlayerHandler {
 
         collection.updateOne(new Document("uuid", playerData.getUuid().toString()),
                 new Document("$set", playerDocument),
-                new com.mongodb.client.model.UpdateOptions().upsert(true));
+                new UpdateOptions().upsert(true));
     }
 
     public void loadData(PlayerData playerData) {
-        MongoCollection<Document> collection = POF.getInstance().getMongoDatabase().getCollection("player_data");
+        MongoCollection<Document> collection = Mortal.getInstance().getMongoDatabase().getCollection("player_data");
         Document playerDocument = collection.find(new Document("uuid", playerData.getUuid().toString())).first();
 
         if (playerDocument != null) {

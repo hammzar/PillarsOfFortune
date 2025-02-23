@@ -1,6 +1,6 @@
 package me.hamza.pillarsoffortune.item;
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.game.Game;
 import me.hamza.pillarsoffortune.game.GameState;
 import me.hamza.pillarsoffortune.utils.CC;
@@ -24,7 +24,7 @@ public class ItemRunnable extends BukkitRunnable {
         int intervalSeconds = 10;
         int intervalTicks = intervalSeconds * 20;
 
-        Game activeGame = POF.getInstance().getGameManager().getActiveGame();
+        Game activeGame = Mortal.getInstance().getGameManager().getActiveGame();
 
         if (activeGame == null || activeGame.getState() != GameState.PLAYING) {
             return;
@@ -32,7 +32,7 @@ public class ItemRunnable extends BukkitRunnable {
 
         if (ticks >= intervalTicks) {
             for (Player player : activeGame.getGamePlayers()) {
-                Material selectedMaterial = POF.getInstance().getItemRandomizer().getItem();
+                Material selectedMaterial = Mortal.getInstance().getItemRandomizer().getItem();
                 if (selectedMaterial != null) {
                     ItemStack item = new ItemStack(selectedMaterial);
                     PlayerInventory inventory = player.getInventory();

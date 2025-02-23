@@ -1,7 +1,7 @@
 package me.hamza.pillarsoffortune.item;
 
 import lombok.Getter;
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter
 public class ItemRandomizer {
 
-    private final ItemOrganizer itemOrganizer = POF.getInstance().getItemOrganizer();
+    private final ItemOrganizer itemOrganizer = Mortal.getInstance().getItemOrganizer();
 
     public Material getItem() {
         double chance = ThreadLocalRandom.current().nextDouble(100);

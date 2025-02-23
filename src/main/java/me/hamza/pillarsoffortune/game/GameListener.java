@@ -1,7 +1,7 @@
 package me.hamza.pillarsoffortune.game;
 
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.player.PlayerData;
 import me.hamza.pillarsoffortune.player.PlayerState;
 import org.bukkit.Location;
@@ -26,7 +26,7 @@ public class GameListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
 
-        Game game = POF.getInstance().getGameManager().getActiveGame();
+        Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
             return;
         }
@@ -44,16 +44,21 @@ public class GameListener implements Listener {
     @EventHandler
     public void onBlockBreaking(BlockBreakEvent e) {
         Player player = e.getPlayer();
-        Game game = POF.getInstance().getGameManager().getActiveGame();
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        if (playerData.isBuildMode()) {
+            return;
+        }
+
+        if (playerData.getState() != PlayerState.PLAYING) {
+            e.setCancelled(true);
+        }
+
+        Game game = Mortal.getInstance().getGameManager().getActiveGame();
         Block block = e.getBlock();
         if (game == null) {
             return;
         }
 
-        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
-        if (playerData.getState() != PlayerState.PLAYING) {
-            e.setCancelled(true);
-        }
 
         if (game.getGamePlayers().contains(player)) {
             if (game.getState() != GameState.PLAYING) {
@@ -69,16 +74,21 @@ public class GameListener implements Listener {
     @EventHandler
     public void onBlockPLacing(BlockPlaceEvent e) {
         Player player = e.getPlayer();
-        Game game = POF.getInstance().getGameManager().getActiveGame();
-        Block block = e.getBlockPlaced();
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        if (playerData.isBuildMode()) {
+            return;
+        }
+
+        if (playerData.getState() != PlayerState.PLAYING) {
+            e.setCancelled(true);
+        }
+
+        Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
             return;
         }
 
-        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
-        if (playerData.getState() != PlayerState.PLAYING) {
-            e.setCancelled(true);
-        }
+        Block block = e.getBlockPlaced();
 
         if (game.getGamePlayers().contains(player)) {
             if (game.getState() != GameState.PLAYING) {
@@ -87,19 +97,25 @@ public class GameListener implements Listener {
             }
 
             Location location = block.getLocation();
+
             game.getBlockMap().put(location, location.getBlock().getBlockData());
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageByBlockEvent e) {
+        if (!(e.getEntity() instanceof Player)) {
+            return;
+        }
+
         Player player = (Player) e.getEntity();
-        Game game = POF.getInstance().getGameManager().getActiveGame();
+
+        Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
             return;
         }
 
-        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
         if (playerData.getState() != PlayerState.PLAYING || game.getState() != GameState.PLAYING) {
             e.setCancelled(true);
         }
@@ -107,15 +123,21 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onPlayerHit(EntityDamageByEntityEvent e) {
+        if (!(e.getEntity() instanceof Player)) {
+            return;
+        }
+
         Player player = (Player) e.getEntity();
-        Game game = POF.getInstance().getGameManager().getActiveGame();
+
+        Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
             return;
         }
 
-        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
         if (playerData.getState() != PlayerState.PLAYING || game.getState() != GameState.PLAYING) {
             e.setCancelled(true);
         }
     }
+
 }

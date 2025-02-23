@@ -1,7 +1,7 @@
 package me.hamza.pillarsoffortune.player;
 
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.game.Game;
 import me.hamza.pillarsoffortune.utils.CC;
 import org.bukkit.Bukkit;
@@ -18,11 +18,11 @@ import java.util.List;
 
 public class PlayerRunnable extends BukkitRunnable {
 
-    private final int gameSize = POF.getInstance().getSettingsConfiguration().getConfig().getInt("game.size");
+    private final int gameSize = Mortal.getInstance().getSettingsConfiguration().getConfig().getInt("game.size");
 
     @Override
     public void run() {
-        int playersOnTheServer = POF.getInstance().getServer().getOnlinePlayers().size();
+        int playersOnTheServer = Mortal.getInstance().getServer().getOnlinePlayers().size();
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
         if (onlinePlayers.isEmpty()) {
             return;
@@ -38,10 +38,11 @@ public class PlayerRunnable extends BukkitRunnable {
         newGame.start();
 
         Bukkit.broadcastMessage("§cDebug: Setting active game");
-        POF.getInstance().getGameManager().setActiveGame(newGame);
+        Mortal.getInstance().getGameManager().setActiveGame(newGame);
 
         onlinePlayers.forEach(player -> player.sendMessage(CC.color("&aGame will start shortly.")));
         Bukkit.broadcastMessage("§cDebug: Cancelling runnable");
         cancel();
     }
+
 }

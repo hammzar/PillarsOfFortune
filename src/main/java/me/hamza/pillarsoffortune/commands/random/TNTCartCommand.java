@@ -1,9 +1,6 @@
-package me.hamza.pillarsoffortune.commands;
+package me.hamza.pillarsoffortune.commands.random;
 
-import me.hamza.pillarsoffortune.POF;
 import me.hamza.pillarsoffortune.utils.CC;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -15,6 +12,9 @@ import org.jetbrains.annotations.NotNull;
  * @author Hammzar
  * @since 21/02/2025
  */
+
+
+//Made this for fun purpose
 
 public class TNTCartCommand implements CommandExecutor {
     @Override

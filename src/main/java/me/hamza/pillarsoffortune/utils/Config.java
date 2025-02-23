@@ -1,7 +1,7 @@
 package me.hamza.pillarsoffortune.utils;
 
 import lombok.Getter;
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -17,7 +17,7 @@ public class Config {
     private final File fileConfig;
     private final YamlConfiguration config;
 
-    public Config(String name, POF plugin) {
+    public Config(String name, Mortal plugin) {
         fileConfig = new File(plugin.getDataFolder(), name);
 
         if (!fileConfig.exists()) {

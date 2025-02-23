@@ -2,7 +2,7 @@ package me.hamza.pillarsoffortune.player;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.game.Game;
 import org.bukkit.Bukkit;
 
@@ -21,15 +21,15 @@ public class PlayerData {
     private int wins;
     private int losses;
     private int kills;
-    private Game game;
     private PlayerState state = PlayerState.LOBBY;
+
+    private boolean buildMode = false;
 
     public PlayerData(UUID cUuid) {
         this.uuid = cUuid;
         this.username = Bukkit.getOfflinePlayer(cUuid).getName();
         this.wins = 0;
         this.losses = 0;
-        this.game = null;
     }
 
     public void addWins(int amount) {
@@ -45,11 +45,11 @@ public class PlayerData {
     }
 
     public void store() {
-        POF.getInstance().getPlayerHandler().storeData(this);
+        Mortal.getInstance().getPlayerHandler().storeData(this);
     }
 
     public void load() {
-        POF.getInstance().getPlayerHandler().loadData(this);
+        Mortal.getInstance().getPlayerHandler().loadData(this);
     }
 }
 

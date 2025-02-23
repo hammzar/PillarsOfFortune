@@ -1,7 +1,7 @@
 package me.hamza.pillarsoffortune.arena;
 
 import lombok.Getter;
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.utils.ObjectSerializer;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ArenaHandler {
 
     private final List<Arena> arenas = new ArrayList<>();
-    private final FileConfiguration configuration = POF.getInstance().getArenaConfiguration().getConfig();
+    private final FileConfiguration configuration = Mortal.getInstance().getArenaConfiguration().getConfig();
 
     public void init() {
         if (configuration.getConfigurationSection("arenas") == null) {
@@ -57,7 +57,7 @@ public class ArenaHandler {
         Arena arena = getArena(name);
         arenas.remove(arena);
         configuration.set("arenas." + name, null);
-        POF.getInstance().getArenaConfiguration().save();
+        Mortal.getInstance().getArenaConfiguration().save();
     }
 
     public Arena getArena(String name) {
@@ -82,7 +82,7 @@ public class ArenaHandler {
         }
         configuration.set(path + ".spawnPoints", serializedSpawnPoints);
 
-        POF.getInstance().getArenaConfiguration().save();
+        Mortal.getInstance().getArenaConfiguration().save();
     }
 
 }

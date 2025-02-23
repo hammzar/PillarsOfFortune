@@ -1,7 +1,7 @@
 package me.hamza.pillarsoffortune.game.runnables;
 
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.game.Game;
 import me.hamza.pillarsoffortune.game.GameState;
 import me.hamza.pillarsoffortune.utils.CC;
@@ -19,7 +19,7 @@ public class GameRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        Game activeGame = POF.getInstance().getGameManager().getActiveGame();
+        Game activeGame = Mortal.getInstance().getGameManager().getActiveGame();
 
         if (activeGame == null) {
             cancel();
@@ -50,7 +50,7 @@ public class GameRunnable extends BukkitRunnable {
 
                 activeGame.getUsedSpawns().forEach(GlassCageUtils::removeGlassCage);
 
-                new GameRunnableEnd().runTaskTimer(POF.getInstance(), 0, 20L);
+                new GameRunnableEnd().runTaskTimer(Mortal.getInstance(), 0, 20L);
             }
         }
     }

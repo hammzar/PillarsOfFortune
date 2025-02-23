@@ -1,6 +1,6 @@
 package me.hamza.pillarsoffortune.commands;
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.arena.Arena;
 import me.hamza.pillarsoffortune.arena.ArenaHandler;
 import me.hamza.pillarsoffortune.utils.CC;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ArenaCommand implements CommandExecutor {
 
-    private final ArenaHandler arenaHandler = POF.getInstance().getArenaHandler();
+    private final ArenaHandler arenaHandler = Mortal.getInstance().getArenaHandler();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,15 +32,7 @@ public class ArenaCommand implements CommandExecutor {
         Player player = (Player) sender;
 
         if (args.length == 0) {
-            player.sendMessage("");
-            player.sendMessage(CC.color("&d&lPILLARS OF FORTUNE &7- &dArena Commands"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena create <name> &7- &fAdd an arena"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena remove <name> &7- &fRemove an arena"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena list &7- &fList all arenas"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena teleport <name> &7- &fTeleport to an arena"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena addspawn <name> &7- &fAdd an arena spawn"));
-            player.sendMessage(CC.color("&7▢ &dUsage: &f/arena setcenter <name> &7- &fSet the arena center"));
-            player.sendMessage("");
+            usage(player);
             return true;
         }
 
@@ -82,18 +74,22 @@ public class ArenaCommand implements CommandExecutor {
                 }
                 addSpawn(player, args[1]);
             default:
-                player.sendMessage("");
-                player.sendMessage(CC.color("&d&lPILLARS OF FORTUNE &7- &dArena Commands"));
-                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena create <name> &7- &fAdd an arena"));
-                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena remove <name> &7- &fRemove an arena"));
-                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena list &7- &fList all arenas"));
-                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena teleport <name> &7- &fTeleport to an arena"));
-                player.sendMessage(CC.color("&7▢ &dUsage: &f/arena addspawn <name> &7- &fAdd an arena spawn"));
-                player.sendMessage("");
+                usage(player);
                 break;
         }
 
         return true;
+    }
+
+    private void usage(Player player) {
+        player.sendMessage("");
+        player.sendMessage(CC.color("&d&lPILLARS OF FORTUNE &7- &dArena Commands"));
+        player.sendMessage(CC.color("&7▢ &f/arena create &d<name> &7- &fAdd an arena"));
+        player.sendMessage(CC.color("&7▢ &f/arena remove &d<name> &7- &fRemove an arena"));
+        player.sendMessage(CC.color("&7▢ &f/arena list &7- &fList all arenas"));
+        player.sendMessage(CC.color("&7▢ &f/arena teleport &d<name> &7- &fTeleport to an arena"));
+        player.sendMessage(CC.color("&7▢ &f/arena addspawn &d<name> &7- &fAdd an arena spawn"));
+        player.sendMessage("");
     }
 
     private void createArena(Player player, String name) {

@@ -2,7 +2,7 @@ package me.hamza.pillarsoffortune.game;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.arena.Arena;
 import me.hamza.pillarsoffortune.game.runnables.GameRunnable;
 import me.hamza.pillarsoffortune.player.PlayerData;
@@ -40,10 +40,10 @@ public class Game {
         this.state = GameState.WAITING;
         this.playerSize = cPlayerSize;
         this.blockMap = new HashMap<>();
-        this.arena = POF.getInstance().getArenaHandler().getRandomArena();
+        this.arena = Mortal.getInstance().getArenaHandler().getRandomArena();
         this.usedSpawns = new HashSet<>();
         cPlayers.forEach(player -> this.gamePlayers.add(new GamePlayer(player.getUniqueId())));
-        POF.getInstance().getGameManager().setActiveGame(this);
+        Mortal.getInstance().getGameManager().setActiveGame(this);
     }
 
     public void start() {
@@ -66,7 +66,7 @@ public class Game {
         }
 
         getGamePlayers().forEach(player -> {
-            PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+            PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
             playerData.setState(PlayerState.PLAYING);
         });
 
@@ -78,13 +78,12 @@ public class Game {
 
         Bukkit.broadcastMessage("§cDebug: Starting game runnable");
         GameRunnable gameRunnable = new GameRunnable();
-        gameRunnable.runTaskTimer(POF.getInstance(), 0, 1L);
+        gameRunnable.runTaskTimer(Mortal.getInstance(), 0, 1L);
     }
 
     public void end() {
-        if (POF.getInstance().getGameManager().getActiveGame() == null) {
-            return;
-        }
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(CC.color("&cGame has ended.")));
+        Bukkit.shutdown();
     }
 
     public List<Player> getGamePlayers() {
@@ -123,6 +122,7 @@ public class Game {
         }
 
         gamePlayer.setDead(true);
+        this.gamePlayers.remove(gamePlayer);
         getGamePlayers().forEach(player1 -> player1.sendMessage(CC.color("&c" + player.getName() + " has been eliminated!")));
 
         List<GamePlayer> alivePlayers = gamePlayers.stream()
@@ -134,11 +134,11 @@ public class Game {
         }
 
         if (killer != null) {
-            PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(killer.getUniqueId());
+            PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(killer.getUniqueId());
             playerData.addKills(1);
         }
 
-        PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
         playerData.addLosses(1);
     }
 }

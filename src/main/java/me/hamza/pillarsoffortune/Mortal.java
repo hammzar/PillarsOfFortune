@@ -8,8 +8,9 @@ import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import me.hamza.pillarsoffortune.arena.ArenaHandler;
 import me.hamza.pillarsoffortune.commands.ArenaCommand;
+import me.hamza.pillarsoffortune.commands.BuildModeCommand;
 import me.hamza.pillarsoffortune.commands.MainCommand;
-import me.hamza.pillarsoffortune.commands.TNTCartCommand;
+import me.hamza.pillarsoffortune.commands.random.TNTCartCommand;
 import me.hamza.pillarsoffortune.game.GameListener;
 import me.hamza.pillarsoffortune.game.GameManager;
 import me.hamza.pillarsoffortune.item.ItemOrganizer;
@@ -18,8 +19,11 @@ import me.hamza.pillarsoffortune.player.PlayerHandler;
 import me.hamza.pillarsoffortune.player.PlayerListener;
 import me.hamza.pillarsoffortune.item.ItemRunnable;
 import me.hamza.pillarsoffortune.player.PlayerRunnable;
+import me.hamza.pillarsoffortune.sidebar.Sidebar;
 import me.hamza.pillarsoffortune.utils.CC;
 import me.hamza.pillarsoffortune.utils.Config;
+import me.hamza.pillarsoffortune.utils.assemble.Assemble;
+import me.hamza.pillarsoffortune.utils.assemble.AssembleStyle;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,10 +36,10 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Getter
-public class POF extends JavaPlugin {
+public class Mortal extends JavaPlugin {
 
     @Getter
-    public static POF instance;
+    public static Mortal instance;
     private ArenaHandler arenaHandler;
     private ItemOrganizer itemOrganizer;
     private ItemRandomizer itemRandomizer;
@@ -73,16 +77,17 @@ public class POF extends JavaPlugin {
         playerRunnable.runTaskTimer(this, 0L, 20L);
 
         Objects.requireNonNull(this.getCommand("arena")).setExecutor(new ArenaCommand());
-        Objects.requireNonNull(this.getCommand("pof")).setExecutor(new MainCommand());
+        Objects.requireNonNull(this.getCommand("mortal")).setExecutor(new MainCommand());
         Objects.requireNonNull(this.getCommand("tntcart")).setExecutor(new TNTCartCommand());
+        Objects.requireNonNull(this.getCommand("buildmode")).setExecutor(new BuildModeCommand());
+
+        Assemble assemble = new Assemble(this, new Sidebar());
+        assemble.setAssembleStyle(AssembleStyle.MODERN);
     }
 
     @Override
     public void onDisable() {
         itemRunnable.cancel();
-        if (gameManager.getActiveGame() != null) {
-            gameManager.getActiveGame().end();
-        }
         arenaHandler.getArenas().forEach(arena -> arenaHandler.saveArena(arena));
         playerHandler.getPlayerDataMap().forEach((uuid, playerData) -> playerData.store());
     }
@@ -97,9 +102,9 @@ public class POF extends JavaPlugin {
             this.mongoClient = MongoClients.create(mongoclientbuilder.build());
             this.mongoDatabase = mongoClient.getDatabase(Objects.requireNonNull(settingsConfiguration.getConfig().getString("MONGO.DATABASE")));
 
-            CC.log("&8[&dPOF&8] &aEstablished MongoDB connection!");
+            CC.log("&8[&dMortal&8] &aEstablished MongoDB connection!");
         } catch (Exception exception) {
-            CC.log("&8[&dPOF&8] &cMongoDB has failed to establish a connection!");
+            CC.log("&8[&dMortal&8] &cMongoDB has failed to establish a connection!");
         }
     }
 

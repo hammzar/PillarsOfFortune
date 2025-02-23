@@ -1,6 +1,6 @@
 package me.hamza.pillarsoffortune.game.runnables;
 
-import me.hamza.pillarsoffortune.POF;
+import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.game.Game;
 import me.hamza.pillarsoffortune.game.GameState;
 import me.hamza.pillarsoffortune.player.PlayerData;
@@ -27,7 +27,7 @@ public class GameRunnableEnd extends BukkitRunnable {
 
     @Override
     public void run() {
-        Game activeGame = POF.getInstance().getGameManager().getActiveGame();
+        Game activeGame = Mortal.getInstance().getGameManager().getActiveGame();
 
         if (activeGame == null) {
             cancel();
@@ -37,7 +37,7 @@ public class GameRunnableEnd extends BukkitRunnable {
         Player winnerPlayer = Bukkit.getPlayer(activeGame.getWinner());
 
         if (winnerPlayer != null) {
-            PlayerData playerData = POF.getInstance().getPlayerHandler().getPlayer(winnerPlayer.getUniqueId());
+            PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(winnerPlayer.getUniqueId());
             playerData.setWins(playerData.getWins() + 1);
 
             activeGame.setState(GameState.ENDING);
@@ -57,7 +57,7 @@ public class GameRunnableEnd extends BukkitRunnable {
                     launchFirework(winnerPlayer);
                     celebrationTicks -= 20;
                 }
-            }.runTaskTimer(POF.getInstance(), 0, 20);
+            }.runTaskTimer(Mortal.getInstance(), 0, 20);
         }
     }
 

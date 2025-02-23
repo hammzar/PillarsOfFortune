@@ -1,18 +1,25 @@
-name: POF
+name: Mortal
 version: '${project.version}'
 author: Hammzar
-main: me.hamza.pillarsoffortune.POF
+main: me.hamza.pillarsoffortune.Mortal
 api-version: '1.21'
 description: '${project.description}'
 commands:
-  pof:
+  mortal:
     description: Main Command of the core
-    usage: /pof
+    usage: /mortal
     aliases:
       - pillarsoffortune
   arena:
     description: Arena management commands
     usage: /arena <add|remove|list|teleport>
-    permission: pof.arena
+    permission: mortal.arena
   tntcart:
     description: TNT cart commands
+    usage: /tntcart
+    permission: mortal.tntcart
+  buildmode:
+    description: Build mode commands
+    usage: /build
+    permission: mortal.buildmode
+
