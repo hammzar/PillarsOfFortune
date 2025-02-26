@@ -47,11 +47,9 @@ public class Game {
     }
 
     public void start() {
-        Bukkit.broadcastMessage("§cDebug: Game started with " + gamePlayers.size() + " players.");
         usedSpawns.clear();
 
         for (GamePlayer gamePlayer : gamePlayers) {
-            Bukkit.broadcastMessage("§cDebug: Teleporting player " + gamePlayer.getPlayer().getName());
             Player player = gamePlayer.getPlayer();
             Location spawn = getUniqueSpawnLocation();
 
@@ -59,7 +57,6 @@ public class Game {
                 Bukkit.broadcastMessage("§cDebug: Could not find a spawn location for player " + player.getName());
                 return;
             } else {
-                Bukkit.broadcastMessage("§cDebug: Teleporting player " + player.getName() + " to " + spawn.toString());
                 player.teleport(spawn);
                 GlassCageUtils.createGlassCage(spawn);
             }
@@ -70,13 +67,8 @@ public class Game {
             playerData.setState(PlayerState.PLAYING);
         });
 
-        Bukkit.broadcastMessage("§cDebug: Resetting players");
         getGamePlayers().forEach(player -> PlayerUtils.reset(player, true));
-
-        Bukkit.broadcastMessage("§cDebug: Starting game");
         state = GameState.STARTING;
-
-        Bukkit.broadcastMessage("§cDebug: Starting game runnable");
         GameRunnable gameRunnable = new GameRunnable();
         gameRunnable.runTaskTimer(Mortal.getInstance(), 0, 1L);
     }
@@ -94,7 +86,6 @@ public class Game {
         List<Location> availablePositions = arena.getLocations().stream()
                 .filter(location -> !usedSpawns.contains(location))
                 .collect(Collectors.toList());
-
         if (availablePositions.isEmpty()) {
             return null;
         }
@@ -116,7 +107,6 @@ public class Game {
 
     public void onDeath(Player player, Player killer) {
         GamePlayer gamePlayer = getGamePlayer(player.getUniqueId());
-
         if (gamePlayer == null || gamePlayer.isDead()) {
             return;
         }
@@ -141,4 +131,5 @@ public class Game {
         PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
         playerData.addLosses(1);
     }
+    
 }
