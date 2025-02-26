@@ -1,5 +1,6 @@
 package me.hamza.pillarsoffortune.game;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -12,19 +13,12 @@ import java.util.UUID;
  * @since 21/02/2025
  */
 
+@AllArgsConstructor
 @Getter @Setter
 public class GamePlayer {
 
     private final UUID uuid;
     private final Player player;
     private boolean dead;
-
-    public GamePlayer(UUID cUuid) {
-        this.uuid = cUuid;
-        this.player = Bukkit.getPlayer(cUuid);
-        this.dead = false;
-    }
-
-
 
 }
