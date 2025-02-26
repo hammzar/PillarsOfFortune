@@ -25,8 +25,7 @@ Feel free to modify, fork, or use this project. If you plan to sell, distribute,
 
 ### Installation
 
-1. Clone the repo:  
-   `git clone <repository_url>`
+1. Clone the repo:  `git clone <repository_url>`
 2. Compile the plugin using Maven.
 3. Place the compiled `.jar` file into the `plugins` folder of your Spigot server.
 4. Start your server and the plugin should load automatically.
