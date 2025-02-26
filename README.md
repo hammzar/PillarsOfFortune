@@ -19,8 +19,7 @@ Feel free to modify, fork, or use this project. If you plan to sell, distribute,
 ### State of Development
 
 - Core mechanics are functional
-- Game-ending logic needs testing
-- Not fully tested
+- Plugin isn't fully tested
 
 ---
 
