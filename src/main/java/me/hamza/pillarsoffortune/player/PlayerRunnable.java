@@ -33,15 +33,11 @@ public class PlayerRunnable extends BukkitRunnable {
             return;
         }
 
-        Bukkit.broadcastMessage("§cDebug: Starting game");
         Game newGame = new Game(this.gameSize, onlinePlayers);
         newGame.start();
-
-        Bukkit.broadcastMessage("§cDebug: Setting active game");
+        
         Mortal.getInstance().getGameManager().setActiveGame(newGame);
-
         onlinePlayers.forEach(player -> player.sendMessage(CC.color("&aGame will start shortly.")));
-        Bukkit.broadcastMessage("§cDebug: Cancelling runnable");
         cancel();
     }
 
