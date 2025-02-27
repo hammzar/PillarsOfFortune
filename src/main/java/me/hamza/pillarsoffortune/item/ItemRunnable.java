@@ -21,7 +21,7 @@ public class ItemRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        int intervalSeconds = 10;
+        int intervalSeconds = 4;
         int intervalTicks = intervalSeconds * 20;
 
         Game activeGame = Mortal.getInstance().getGameManager().getActiveGame();

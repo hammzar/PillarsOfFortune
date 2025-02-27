@@ -1,10 +1,15 @@
 package me.hamza.pillarsoffortune.player;
 
 import me.hamza.pillarsoffortune.Mortal;
+import me.hamza.pillarsoffortune.game.Game;
+import me.hamza.pillarsoffortune.game.GameState;
+import me.hamza.pillarsoffortune.utils.CC;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -24,6 +29,12 @@ public class PlayerListener implements Listener {
 
         PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(uniqueID);
         playerData.setUsername(player.getName());
+
+        if (player.isDead()) {
+            player.spigot().respawn();
+        }
+
+        player.setGameMode(GameMode.SURVIVAL);
     }
 
     @EventHandler
@@ -37,10 +48,25 @@ public class PlayerListener implements Listener {
         PlayerData playerData = new PlayerData(uniqueId);
         playerData.load();
         Mortal.getInstance().getPlayerHandler().getPlayerDataMap().put(uniqueId, playerData);
+
+        Game activeGame = Mortal.getInstance().getGameManager().getActiveGame();
+        if (activeGame == null) {
+            return;
+        }
+
+        if (activeGame.getState() == GameState.PLAYING) {
+            player.kickPlayer(CC.color("&cGame has already begun."));
+        }
     }
 
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent e) {
         Mortal.getInstance().getPlayerHandler().getPlayer(e.getPlayer().getUniqueId()).store();
     }
+
+    @EventHandler
+    public void onKick(PlayerKickEvent e) {
+        Mortal.getInstance().getPlayerHandler().getPlayer(e.getPlayer().getUniqueId()).store();
+    }
+
 }

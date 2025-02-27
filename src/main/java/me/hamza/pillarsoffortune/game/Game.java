@@ -11,9 +11,11 @@ import me.hamza.pillarsoffortune.utils.CC;
 import me.hamza.pillarsoffortune.utils.GlassCageUtils;
 import me.hamza.pillarsoffortune.utils.PlayerUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,7 +26,8 @@ import java.util.stream.Collectors;
  * @since 21/02/2025
  */
 
-@Getter @Setter
+@Getter
+@Setter
 public class Game {
 
     protected final Set<GamePlayer> gamePlayers;
@@ -54,11 +57,11 @@ public class Game {
             Location spawn = getUniqueSpawnLocation();
 
             if (spawn == null) {
-                Bukkit.broadcastMessage("§cDebug: Could not find a spawn location for player " + player.getName());
+                Bukkit.getConsoleSender().sendMessage("§cDebug: Could not find a spawn location for player " + player.getName());
                 return;
             } else {
-                player.teleport(spawn);
                 GlassCageUtils.createGlassCage(spawn);
+                player.teleport(spawn);
             }
         }
 
@@ -111,9 +114,12 @@ public class Game {
             return;
         }
 
+        Mortal.getInstance().getServer().getScheduler().runTaskLater(Mortal.getInstance(), () -> player.spigot().respawn(), 1L);
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(getArena().getCenter());
+
         gamePlayer.setDead(true);
         this.gamePlayers.remove(gamePlayer);
-        getGamePlayers().forEach(player1 -> player1.sendMessage(CC.color("&c" + player.getName() + " has been eliminated!")));
 
         List<GamePlayer> alivePlayers = gamePlayers.stream()
                 .filter(gameP -> !gameP.isDead())
@@ -126,10 +132,21 @@ public class Game {
         if (killer != null) {
             PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(killer.getUniqueId());
             playerData.addKills(1);
+            getGamePlayers().forEach(player1 -> player1.sendMessage(CC.color("&c" + player.getName() + " has been eliminated by " + killer.getName() + "!")));
         }
 
+        getGamePlayers().forEach(player1 -> player1.sendMessage(CC.color("&c" + player.getName() + " has been eliminated!")));
         PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
         playerData.addLosses(1);
     }
-    
+
+    public void handleQuit(Player player) {
+        if (getGamePlayer(player.getUniqueId()) == null) {
+            return;
+        }
+
+        getGamePlayer(player.getUniqueId()).setDead(true);
+        gamePlayers.remove(getGamePlayer(player.getUniqueId()));
+        getGamePlayers().forEach(player1 -> player1.sendMessage(CC.color("&c" + player.getName() + " has been eliminated because they left!")));
+    }
 }

@@ -1,6 +1,5 @@
 package me.hamza.pillarsoffortune.utils;
 
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,10 +13,13 @@ public class GlassCageUtils {
 
     public static void createGlassCage(Location center) {
         int[][] directions = {
-                {1, 0, 0}, {-1, 0, 0}, {0, 0, 1}, {0, 0, -1}, // Walls
-                {1, 1, 0}, {-1, 1, 0}, {0, 1, 1}, {0, 1, -1}, // Upper frame
-                {1, -1, 0}, {-1, -1, 0}, {0, -1, 1}, {0, -1, -1}, // Lower frame
-                {0, 1, 0}, {0, -1, 0} // Top and bottom center
+                {1, 0, 0}, {-1, 0, 0},  // Left & Right Walls (Body Level)
+                {0, 0, 1}, {0, 0, -1},  // Front & Back Walls (Body Level)
+                {1, 1, 0}, {-1, 1, 0}, {0, 1, 1}, {0, 1, -1},  // Walls at Head Level
+                {1, 2, 0}, {-1, 2, 0}, {0, 2, 1}, {0, 2, -1},  // Walls at Top Level
+                {0, 2, 0}, // Top Cover (Directly Above Player's Head)
+                {1, -1, 0}, {-1, -1, 0}, {0, -1, 1}, {0, -1, -1}, // Lower Frame (Floor)
+                {0, -1, 0} // Bottom Center (Player Standing Block)
         };
 
         for (int[] dir : directions) {
@@ -31,8 +33,9 @@ public class GlassCageUtils {
         int[][] directions = {
                 {1, 0, 0}, {-1, 0, 0}, {0, 0, 1}, {0, 0, -1},
                 {1, 1, 0}, {-1, 1, 0}, {0, 1, 1}, {0, 1, -1},
-                {1, -1, 0}, {-1, -1, 0}, {0, -1, 1}, {0, -1, -1},
-                {0, 1, 0}, {0, -1, 0}
+                {1, 2, 0}, {-1, 2, 0}, {0, 2, 1}, {0, 2, -1},
+                {0, 2, 0}, {1, -1, 0}, {-1, -1, 0}, {0, -1, 1}, {0, -1, -1},
+                {0, -1, 0}
         };
 
         for (int[] dir : directions) {

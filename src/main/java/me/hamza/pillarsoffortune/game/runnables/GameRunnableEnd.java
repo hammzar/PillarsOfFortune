@@ -8,12 +8,14 @@ import me.hamza.pillarsoffortune.utils.CC;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -34,6 +36,11 @@ public class GameRunnableEnd extends BukkitRunnable {
             return;
         }
 
+        UUID winnerUUID = activeGame.getWinner();
+        if (winnerUUID == null) {
+            return;
+        }
+
         Player winnerPlayer = Bukkit.getPlayer(activeGame.getWinner());
 
         if (winnerPlayer != null) {
@@ -41,9 +48,8 @@ public class GameRunnableEnd extends BukkitRunnable {
             playerData.setWins(playerData.getWins() + 1);
 
             activeGame.setState(GameState.ENDING);
-            activeGame.getGamePlayers().forEach(gamePlayer ->
-                    gamePlayer.sendMessage(CC.color("&a" + winnerPlayer.getName() + " has won the game!"))
-            );
+
+            Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(CC.color("&a" + winnerPlayer.getName() + " has won the game!")));
 
             new BukkitRunnable() {
                 @Override
@@ -55,7 +61,7 @@ public class GameRunnableEnd extends BukkitRunnable {
                     }
 
                     launchFirework(winnerPlayer);
-                    celebrationTicks -= 20;
+                    celebrationTicks -= 5;
                 }
             }.runTaskTimer(Mortal.getInstance(), 0, 20);
         }

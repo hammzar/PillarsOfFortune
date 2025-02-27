@@ -13,7 +13,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * @author Hammzar
@@ -25,6 +28,10 @@ public class GameListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
+        if (playerData.getState() != PlayerState.PLAYING) {
+            return;
+        }
 
         Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
@@ -36,7 +43,6 @@ public class GameListener implements Listener {
             game.onDeath(player, null);
             return;
         }
-
 
         game.onDeath(player, killer);
     }
@@ -137,6 +143,44 @@ public class GameListener implements Listener {
         PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(player.getUniqueId());
         if (playerData.getState() != PlayerState.PLAYING || game.getState() != GameState.PLAYING) {
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onFallDmg(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player)) {
+            return;
+        }
+
+        Game game = Mortal.getInstance().getGameManager().getActiveGame();
+        if (game == null) {
+            return;
+        }
+
+        if (game.getState() != GameState.PLAYING) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(e.getPlayer().getUniqueId());
+        if (playerData.getState() == PlayerState.PLAYING) {
+            Game game = Mortal.getInstance().getGameManager().getActiveGame();
+            if (game != null) {
+                game.handleQuit(e.getPlayer());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onKick(PlayerKickEvent e) {
+        PlayerData playerData = Mortal.getInstance().getPlayerHandler().getPlayer(e.getPlayer().getUniqueId());
+        if (playerData.getState() == PlayerState.PLAYING) {
+            Game game = Mortal.getInstance().getGameManager().getActiveGame();
+            if (game != null) {
+                game.handleQuit(e.getPlayer());
+            }
         }
     }
 
