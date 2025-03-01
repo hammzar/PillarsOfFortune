@@ -1,6 +1,8 @@
 MONGO:
-  STRING: "mongodb://localhost:27017"
+  STRING: mongodb://localhost:27017
   DATABASE: PillarsOfFortune
+
+lobby-location: world,-761.8679595299263,63.0,23.30000001192093,-174.69908,16.789843
 
 game:
   size: 2

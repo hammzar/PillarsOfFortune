@@ -4,6 +4,7 @@ import me.hamza.pillarsoffortune.Mortal;
 import me.hamza.pillarsoffortune.game.Game;
 import me.hamza.pillarsoffortune.game.GameState;
 import me.hamza.pillarsoffortune.utils.CC;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,6 +36,13 @@ public class PlayerListener implements Listener {
         }
 
         player.setGameMode(GameMode.SURVIVAL);
+        Mortal.getInstance().getHotbarHandler().applyItems(player);
+
+        if (Mortal.getInstance().getLobbyHandler().getLobby() != null) {
+            player.teleport(Mortal.getInstance().getLobbyHandler().getLobby());
+        } else {
+            Bukkit.broadcastMessage(CC.color("&4[ERROR] &cNo lobby has been set!"));
+        }
     }
 
     @EventHandler

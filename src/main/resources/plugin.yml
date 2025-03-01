@@ -22,4 +22,8 @@ commands:
     description: Build mode commands
     usage: /build
     permission: mortal.buildmode
+  setlobby:
+    description: Set the lobby
+    usage: /setlobby
+    permission: mortal.setlobby
 

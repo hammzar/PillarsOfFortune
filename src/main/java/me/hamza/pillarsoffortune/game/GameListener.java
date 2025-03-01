@@ -118,6 +118,7 @@ public class GameListener implements Listener {
 
         Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
+            e.setCancelled(true);
             return;
         }
 
@@ -137,6 +138,7 @@ public class GameListener implements Listener {
 
         Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
+            e.setCancelled(true);
             return;
         }
 
@@ -154,6 +156,7 @@ public class GameListener implements Listener {
 
         Game game = Mortal.getInstance().getGameManager().getActiveGame();
         if (game == null) {
+            e.setCancelled(true);
             return;
         }
 
